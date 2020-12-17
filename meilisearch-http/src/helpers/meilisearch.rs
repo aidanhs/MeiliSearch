@@ -599,7 +599,7 @@ mod tests {
 
         let mut m = Vec::new();
         m.push(MatchPosition {
-            start: 510,
+            start: 529,
             length: 9,
         });
         matches.insert("description".to_string(), m);
@@ -614,6 +614,7 @@ mod tests {
 
         assert_eq!(result, result_expected);
     }
+
 
     #[test]
     fn highlight_longest_match() {
