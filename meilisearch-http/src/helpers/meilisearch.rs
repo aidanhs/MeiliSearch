@@ -178,7 +178,7 @@ impl<'a> SearchBuilder<'a> {
                 all_attributes.extend(&all_formatted);
             },
             None => {
-                all_attributes.extend(schema.displayed_name());
+                all_attributes.extend(schema.displayed_names());
                 // If we specified at least one attribute to highlight or crop then
                 // all available attributes will be returned in the _formatted field.
                 if self.attributes_to_highlight.is_some() || self.attributes_to_crop.is_some() {
@@ -193,9 +193,7 @@ impl<'a> SearchBuilder<'a> {
                 .index
                 .document(reader, Some(&all_attributes), doc.id)
                 .map_err(|e| Error::retrieve_document(doc.id.0, e))?
-                .ok_or(Error::internal(
-                    "Impossible to retrieve the document; Corrupted data",
-                ))?;
+                .unwrap_or_default();
 
             let mut formatted = document.iter()
                 .filter(|(key, _)| all_formatted.contains(key.as_str()))
@@ -447,7 +445,7 @@ fn calculate_matches(
                     continue;
                 }
             }
-            if !schema.displayed_name().contains(attribute) {
+            if !schema.displayed_names().contains(&attribute) {
                 continue;
             }
             if let Some(pos) = matches_result.get_mut(attribute) {
